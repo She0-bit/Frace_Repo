@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>mockup.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #cf8e6d;}
+.s2 { color: #7a7e85;}
+.s3 { color: #bcbec4;}
+.s4 { color: #2aacb8;}
+.s5 { color: #5f826b; font-style: italic;}
+.s6 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+mockup.py</font>
+</center></td></tr></table>
+<pre>
+<span class="s1">import </span><span class="s0">numpy </span><span class="s1">as </span><span class="s0">np</span>
+<span class="s1">import </span><span class="s0">pandas </span><span class="s1">as </span><span class="s0">pd</span>
+<span class="s2"># Note: You need to ensure 'openpyxl' is installed (pip install openpyxl)</span>
+<span class="s2"># pandas uses openpyxl as the engine to write .xlsx files.</span>
+
+<span class="s2"># --- 1. DATA GENERATION (Mirroring ML Code Logic) ---</span>
+
+<span class="s1">def </span><span class="s0">generate_mock_data</span><span class="s3">(</span><span class="s0">n_samples</span><span class="s3">=</span><span class="s4">200</span><span class="s3">):</span>
+    <span class="s5">&quot;&quot;&quot; 
+    Generates mock data for simulating the relationship between inputs and health outcomes, 
+    matching the logic used to train the Hazard Predictor in the FRACE system. 
+    &quot;&quot;&quot;</span>
+    <span class="s0">print</span><span class="s3">(</span><span class="s6">&quot;--- 1. Generating Mock Data for FRACE Model ---&quot;</span><span class="s3">)</span>
+
+    <span class="s2"># Input Features:</span>
+    <span class="s2"># Temperature (35 to 50 C)</span>
+    <span class="s0">temperature </span><span class="s3">= </span><span class="s0">np</span><span class="s3">.</span><span class="s0">random</span><span class="s3">.</span><span class="s0">uniform</span><span class="s3">(</span><span class="s4">35</span><span class="s3">, </span><span class="s4">50</span><span class="s3">, </span><span class="s0">n_samples</span><span class="s3">)</span>
+
+    <span class="s2"># Crowd Density (1 to 10 persons per sq meter)</span>
+    <span class="s0">crowd_density </span><span class="s3">= </span><span class="s0">np</span><span class="s3">.</span><span class="s0">random</span><span class="s3">.</span><span class="s0">uniform</span><span class="s3">(</span><span class="s4">1</span><span class="s3">, </span><span class="s4">10</span><span class="s3">, </span><span class="s0">n_samples</span><span class="s3">)</span>
+
+    <span class="s2"># Target (Predicted Case Surge)</span>
+    <span class="s2"># Equation: Cases = (Temp * 0.8) + (Density * 1.5) + Random Noise</span>
+    <span class="s0">case_surge </span><span class="s3">= (</span><span class="s0">temperature </span><span class="s3">* </span><span class="s4">0.8</span><span class="s3">) + (</span><span class="s0">crowd_density </span><span class="s3">* </span><span class="s4">1.5</span><span class="s3">) + </span><span class="s0">np</span><span class="s3">.</span><span class="s0">random</span><span class="s3">.</span><span class="s0">normal</span><span class="s3">(</span><span class="s4">0</span><span class="s3">, </span><span class="s4">5</span><span class="s3">, </span><span class="s0">n_samples</span><span class="s3">)</span>
+
+    <span class="s2"># Ensure cases are positive and integer</span>
+    <span class="s0">case_surge </span><span class="s3">= </span><span class="s0">np</span><span class="s3">.</span><span class="s0">maximum</span><span class="s3">(</span><span class="s4">0</span><span class="s3">, </span><span class="s0">np</span><span class="s3">.</span><span class="s0">round</span><span class="s3">(</span><span class="s0">case_surge</span><span class="s3">)).</span><span class="s0">astype</span><span class="s3">(</span><span class="s0">int</span><span class="s3">)</span>
+
+    <span class="s0">data </span><span class="s3">= </span><span class="s0">pd</span><span class="s3">.</span><span class="s0">DataFrame</span><span class="s3">({</span>
+        <span class="s6">'Sample_ID'</span><span class="s3">: </span><span class="s0">range</span><span class="s3">(</span><span class="s4">1</span><span class="s3">, </span><span class="s0">n_samples </span><span class="s3">+ </span><span class="s4">1</span><span class="s3">),</span>
+        <span class="s6">'Temperature_C'</span><span class="s3">: </span><span class="s0">temperature</span><span class="s3">.</span><span class="s0">round</span><span class="s3">(</span><span class="s4">2</span><span class="s3">),</span>
+        <span class="s6">'Crowd_Density_P_sqm'</span><span class="s3">: </span><span class="s0">crowd_density</span><span class="s3">.</span><span class="s0">round</span><span class="s3">(</span><span class="s4">2</span><span class="s3">),</span>
+        <span class="s6">'Predicted_Case_Surge'</span><span class="s3">: </span><span class="s0">case_surge</span>
+    <span class="s3">})</span>
+
+    <span class="s0">print</span><span class="s3">(</span><span class="s6">f&quot;Generated </span><span class="s1">{</span><span class="s0">n_samples</span><span class="s1">} </span><span class="s6">samples.&quot;</span><span class="s3">)</span>
+    <span class="s1">return </span><span class="s0">data</span>
+
+
+<span class="s2"># --- 2. EXPORT FUNCTION ---</span>
+
+<span class="s1">def </span><span class="s0">export_to_excel</span><span class="s3">(</span><span class="s0">dataframe</span><span class="s3">: </span><span class="s0">pd</span><span class="s3">.</span><span class="s0">DataFrame</span><span class="s3">, </span><span class="s0">filename</span><span class="s3">: </span><span class="s0">str </span><span class="s3">= </span><span class="s6">'frace_ml_mock_data.xlsx'</span><span class="s3">):</span>
+    <span class="s5">&quot;&quot;&quot; 
+    Exports the Pandas DataFrame containing mock data to an Excel (.xlsx) file. 
+    &quot;&quot;&quot;</span>
+    <span class="s1">try</span><span class="s3">:</span>
+        <span class="s2"># Use pandas to write to Excel (requires openpyxl engine)</span>
+        <span class="s0">dataframe</span><span class="s3">.</span><span class="s0">to_excel</span><span class="s3">(</span><span class="s0">filename</span><span class="s3">, </span><span class="s0">index</span><span class="s3">=</span><span class="s1">False</span><span class="s3">, </span><span class="s0">sheet_name</span><span class="s3">=</span><span class="s6">'FRACE_Mock_Data'</span><span class="s3">)</span>
+        <span class="s0">print</span><span class="s3">(</span><span class="s6">f&quot;</span><span class="s1">\n</span><span class="s6">--- 2. Export Success ---&quot;</span><span class="s3">)</span>
+        <span class="s0">print</span><span class="s3">(</span><span class="s6">f&quot;Successfully exported mock data to '</span><span class="s1">{</span><span class="s0">filename</span><span class="s1">}</span><span class="s6">'&quot;</span><span class="s3">)</span>
+        <span class="s0">print</span><span class="s3">(</span><span class="s6">&quot;File is ready for review by financial/business experts.&quot;</span><span class="s3">)</span>
+    <span class="s1">except </span><span class="s0">ImportError</span><span class="s3">:</span>
+        <span class="s0">print</span><span class="s3">(</span><span class="s6">&quot;</span><span class="s1">\n</span><span class="s6">--- EXPORT FAILED ---&quot;</span><span class="s3">)</span>
+        <span class="s0">print</span><span class="s3">(</span><span class="s6">&quot;Error: The 'openpyxl' library is required to write .xlsx files.&quot;</span><span class="s3">)</span>
+        <span class="s0">print</span><span class="s3">(</span><span class="s6">&quot;Please run: pip install openpyxl&quot;</span><span class="s3">)</span>
+    <span class="s1">except </span><span class="s0">Exception </span><span class="s1">as </span><span class="s0">e</span><span class="s3">:</span>
+        <span class="s0">print</span><span class="s3">(</span><span class="s6">f&quot;</span><span class="s1">\n</span><span class="s6">--- EXPORT FAILED ---&quot;</span><span class="s3">)</span>
+        <span class="s0">print</span><span class="s3">(</span><span class="s6">f&quot;An unexpected error occurred: </span><span class="s1">{</span><span class="s0">e</span><span class="s1">}</span><span class="s6">&quot;</span><span class="s3">)</span>
+
+
+<span class="s2"># --- 3. EXECUTION ---</span>
+<span class="s1">if </span><span class="s0">__name__ </span><span class="s3">== </span><span class="s6">'__main__'</span><span class="s3">:</span>
+    <span class="s2"># 1. Generate the data</span>
+    <span class="s0">mock_data_df </span><span class="s3">= </span><span class="s0">generate_mock_data</span><span class="s3">(</span><span class="s0">n_samples</span><span class="s3">=</span><span class="s4">500</span><span class="s3">) </span><span class="s2"># Generating 500 samples for a robust file</span>
+
+    <span class="s2"># 2. Export the data to Excel</span>
+    <span class="s0">export_to_excel</span><span class="s3">(</span><span class="s0">mock_data_df</span><span class="s3">)</span></pre>
+</body>
+</html>
